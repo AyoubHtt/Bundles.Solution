@@ -44,8 +44,13 @@ public class Bundle
     {
         List<(string Name, int Count)> rawMaterials = RawMaterialInventory();
 
-        //To obtain the maximum number of finished bundles is sufficient to incorporate the consumption rate
-        //then the prodaction of bundles will stop at the first exhausted raw material 
+        /// In case of a raw material can be duplicated in the other bundle parts, we can solve that by add the following code lines
+        /// rawMaterials = rawMaterials.GroupBy(rawMaterial => rawMaterial.Name)
+        ///                            .Select(group => (group.Key, group.Sum(rawMaterial => rawMaterial.Count)))
+        ///                            .ToList();
+
+        // To obtain the maximum number of finished bundles is sufficient to incorporate the consumption rate
+        // then the prodaction of bundles will stop at the first exhausted raw material 
         var maximumNumberOfFinishedBundles = (from rawMaterial in rawMaterials
                                               join stockRawMaterial in stockRawMaterials on rawMaterial.Name equals stockRawMaterial.Name
                                               select stockRawMaterial.Count/rawMaterial.Count).Min();
